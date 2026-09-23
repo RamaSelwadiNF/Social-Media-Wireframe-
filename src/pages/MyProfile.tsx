@@ -1,28 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth, type User } from "../context/AuthContext";
+import { useFetch } from "../hooks/useFetch";
 import { Mail, Phone, Globe, Building2, MapPin } from "lucide-react";
 
 export default function MyProfile(): React.JSX.Element {
   const { currentUser } = useAuth();
-  const [profile, setProfile] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (!currentUser?.id) return;
+  const profileUrl = currentUser?.id
+    ? `https://jsonplaceholder.typicode.com/users/${currentUser.id}`
+    : null;
 
-    setLoading(true);
-    fetch(`https://jsonplaceholder.typicode.com/users/${currentUser.id}`)
-      .then((res) => res.json())
-      .then((data: User) => {
-        setProfile(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error loading user profile:", err);
-        setLoading(false);
-      });
-  }, [currentUser?.id]);
+  const { data: profile, isLoading } = useFetch<User>(profileUrl);
 
   if (!currentUser) {
     return (
@@ -38,7 +27,7 @@ export default function MyProfile(): React.JSX.Element {
     );
   }
 
-  if (loading) {
+  if (isLoading) {
     return <div className="text-white text-sm">Loading profile...</div>;
   }
 
@@ -63,7 +52,6 @@ export default function MyProfile(): React.JSX.Element {
 
       {/* Info Grid */}
       <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
-        {/* Email */}
         <div className="flex items-center gap-5 rounded-2xl border border-slate-100 bg-slate-50/70 p-6 transition-all hover:border-slate-200 hover:bg-slate-50">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-icy-blue/60 text-royal-plum">
             <Mail className="h-6 w-6" />
@@ -74,7 +62,6 @@ export default function MyProfile(): React.JSX.Element {
           </div>
         </div>
 
-        {/* Phone */}
         <div className="flex items-center gap-5 rounded-2xl border border-slate-100 bg-slate-50/70 p-6 transition-all hover:border-slate-200 hover:bg-slate-50">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-icy-blue/60 text-royal-plum">
             <Phone className="h-6 w-6" />
@@ -85,7 +72,6 @@ export default function MyProfile(): React.JSX.Element {
           </div>
         </div>
 
-        {/* Website */}
         <div className="flex items-center gap-5 rounded-2xl border border-slate-100 bg-slate-50/70 p-6 transition-all hover:border-slate-200 hover:bg-slate-50">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-icy-blue/60 text-royal-plum">
             <Globe className="h-6 w-6" />
@@ -96,7 +82,6 @@ export default function MyProfile(): React.JSX.Element {
           </div>
         </div>
 
-        {/* Company */}
         <div className="flex items-center gap-5 rounded-2xl border border-slate-100 bg-slate-50/70 p-6 transition-all hover:border-slate-200 hover:bg-slate-50">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-icy-blue/60 text-royal-plum">
             <Building2 className="h-6 w-6" />
@@ -107,7 +92,6 @@ export default function MyProfile(): React.JSX.Element {
           </div>
         </div>
 
-        {/* Address */}
         <div className="flex items-start gap-5 rounded-2xl border border-slate-100 bg-slate-50/70 p-6 md:col-span-2 transition-all hover:border-slate-200 hover:bg-slate-50">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-icy-blue/60 text-royal-plum mt-1">
             <MapPin className="h-6 w-6" />
