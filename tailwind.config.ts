@@ -1,4 +1,8 @@
-/** @type {import('tailwindcss').Config} */
+import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
+
+
+  /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
   content: [
@@ -8,14 +12,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Your custom theme colors
-        'white-smoke': '#F5F5F4',
-        'icy-blue': '#C2E6FF',
-        'raspberry-plum': '#B43E8F',
-        'royal-plum': '#7C2767',
-        'midnight-violet': '#230522',
-        
-        // Keep the shadcn defaults below
+        // Custom palette
+        "white-smoke": "#F5F5F4",
+        "icy-blue": "#C2E6FF",
+        "raspberry-plum": "#B43E8F",
+        "royal-plum": "#7C2767",
+        "midnight-violet": "#230522",
+
+        // Shadcn UI theme tokens
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -57,5 +61,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-}
+  plugins: [tailwindcssAnimate],
+} satisfies Config;
