@@ -18,6 +18,7 @@ type LoginFormProps = ComponentPropsWithoutRef<"div">;
 export function LoginForm({ className, ...props }: LoginFormProps): ReactElement {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { login, isLoading } = useAuth();
@@ -27,11 +28,11 @@ export function LoginForm({ className, ...props }: LoginFormProps): ReactElement
     e.preventDefault();
     setErrorMessage(null);
 
-    const success = await login(name, email);
+    const success = await login(name, email, password);
     if (success) {
-      navigate("/my-profile");
+      navigate("/posts");
     } else {
-      setErrorMessage("User not found. Please verify your Name and Email.");
+      setErrorMessage("Invalid credentials or password. (Hint: password is username + 123)");
     }
   };
 
@@ -42,7 +43,7 @@ export function LoginForm({ className, ...props }: LoginFormProps): ReactElement
           <CardTitle className="text-2xl font-bold tracking-tight text-midnight-violet">
             Login to your account
           </CardTitle>
-          <CardDescription>Enter your name and email below to login</CardDescription>
+          <CardDescription>Enter your credentials below to login</CardDescription>
         </CardHeader>
         <CardContent className="px-0">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -53,7 +54,7 @@ export function LoginForm({ className, ...props }: LoginFormProps): ReactElement
                   id="name"
                   name="name"
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="e.g. Leanne Graham"
                   value={name}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     setName(e.target.value);
@@ -71,7 +72,7 @@ export function LoginForm({ className, ...props }: LoginFormProps): ReactElement
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="john.doe@example.com"
+                  placeholder="e.g. Sincere@april.biz"
                   value={email}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     setEmail(e.target.value);
@@ -79,6 +80,24 @@ export function LoginForm({ className, ...props }: LoginFormProps): ReactElement
                   }}
                   required
                   autoComplete="email"
+                />
+              </FieldContent>
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="password">Password</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setPassword(e.target.value);
+                    setErrorMessage(null);
+                  }}
+                  required
                 />
               </FieldContent>
             </Field>
@@ -97,17 +116,7 @@ export function LoginForm({ className, ...props }: LoginFormProps): ReactElement
               >
                 {isLoading ? "Signing in..." : "Login"}
               </Button>
-              <Button variant="outline" type="button" className="w-full">
-                Login with Google
-              </Button>
             </div>
-
-            <p className="mt-2 text-center text-sm text-slate-500">
-              Don&apos;t have an account?{" "}
-              <a href="/login" className="font-semibold text-raspberry-plum underline hover:text-royal-plum">
-                Sign up
-              </a>
-            </p>
           </form>
         </CardContent>
       </Card>

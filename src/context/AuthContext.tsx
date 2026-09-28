@@ -32,14 +32,13 @@ export interface User {
 
 interface AuthContextType {
   currentUser: User | null;
-  login: (name: string, email: string) => Promise<boolean>;
+  login: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
 }
 
 const USERS_API_URL = "https://jsonplaceholder.typicode.com/users";
 
-// Pure API fetch helper without any filtering
 async function fetchUsers(url: string): Promise<User[]> {
   const response = await fetch(url);
   if (!response.ok) {
@@ -57,13 +56,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }): React
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const login = async (name: string, email: string): Promise<boolean> => {
+  const login = async (name: string, email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // 1. Pure API call: only pass the URL
       const users = await fetchUsers(USERS_API_URL);
 
-      // 2. Separate business logic / filtering from the API block
       const normalizedName = name.trim().toLowerCase();
       const normalizedEmail = email.trim().toLowerCase();
 
@@ -73,7 +70,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }): React
           u.email.trim().toLowerCase() === normalizedEmail
       );
 
-      if (matchedUser) {
+      // Check if user exists and password is username + 123
+      if (matchedUser && password.trim() === `${matchedUser.username}123`) {
         setCurrentUser(matchedUser);
         localStorage.setItem("loop_user", JSON.stringify(matchedUser));
         return true;

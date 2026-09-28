@@ -35,7 +35,6 @@ export default function MyProfile(): React.JSX.Element {
 
   return (
     <div className="w-full max-w-6xl min-h-[85vh] flex flex-col justify-start rounded-3xl border border-slate-200 bg-white p-8 sm:p-14 shadow-2xl text-slate-900">
-      {/* Header Section */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 border-b border-slate-100 pb-8">
         <div className="flex h-24 w-24 sm:h-28 sm:w-28 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-royal-plum to-raspberry-plum text-4xl sm:text-5xl font-black text-white shadow-lg shadow-royal-plum/20">
           {user.name.charAt(0)}
@@ -50,7 +49,6 @@ export default function MyProfile(): React.JSX.Element {
         </div>
       </div>
 
-      {/* Info Grid */}
       <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
         <div className="flex items-center gap-5 rounded-2xl border border-slate-100 bg-slate-50/70 p-6 transition-all hover:border-slate-200 hover:bg-slate-50">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-icy-blue/60 text-royal-plum">
