@@ -1,80 +1,67 @@
-"use client";
-
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { BellRing, Globe } from "lucide-react";
-import LanguageDropdown from "@/components/shadcn-space/blocks/topbar-06/header/dropdown-language";
-import ProfileDropdown from "@/components/shadcn-space/blocks/topbar-06/header/dropdown-profile";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { LogOut } from "lucide-react";
 import Search from "@/components/shadcn-space/blocks/topbar-06/header/search";
-import NotificationDropdown from "@/components/shadcn-space/blocks/topbar-06/header/notification-dropdown";
+import { useAuth } from "@/context/AuthContext";
+import { getInitials } from "@/lib/utils";
 
 export default function Header() {
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = (): void => {
+    logout();
+    navigate("/login");
+  };
+  
+
   return (
-    <header className="bg-card sticky top-0 z-50 border-b">
+    <header className="sticky top-0 z-50 border-b bg-card">
       <div className="mx-auto flex items-center justify-between gap-6 px-4 py-2.5 sm:px-6">
+        {/* Left: Brand Logo */}
         <div className="flex items-center gap-4">
-          <SidebarTrigger className="[&_svg]:size-5! cursor-pointer" />
-          <Separator
-            orientation="vertical"
-            className="hidden h-4! sm:block self-center!"
-          />
-          <a href="#" className="sticky top-0 bg-background z-10 block">
+          <Link to="/posts" className="flex items-center gap-2.5">
             <img
-              src="https://images.shadcnspace.com/assets/logo/shadcnspace.svg"
-              alt="logo"
-              className="dark:hidden w-[160px] h-10"
+              src="/logo.png"
+              alt="Loop logo"
+              className="h-8 w-8 object-contain"
             />
-            <img
-              src="https://images.shadcnspace.com/assets/logo/shadcnspace-white.svg"
-              alt="logo"
-              className="hidden dark:block w-[160px] h-10"
-            />
-          </a>
+            <span className="text-xl font-bold tracking-tight text-midnight-violet">
+              Loop
+            </span>
+          </Link>
         </div>
         <div>
           <Search />
         </div>
-        <div className="flex items-center gap-2.5">
-          <NotificationDropdown
-            defaultOpen={false}
-            align="center"
-            trigger={
-              <div className="rounded-full p-2 hover:bg-accent relative before:absolute before:bottom-0 before:left-1/2 before:z-10 before:w-2 before:h-2 before:rounded-full before:bg-red-500 before:top-1">
-                <BellRing className="size-4" />
-              </div>
-            }
-          />
-          <LanguageDropdown
-            trigger={
-              <Button
-                id="language-dropdown-trigger-06"
-                variant="ghost"
-                size="icon"
-                className="focus-visible:ring-0! focus-visible:shadow-none! rounded-full! hover:bg-accent/80! cursor-pointer"
-                suppressHydrationWarning
-              >
-                <Globe size={16} />
-              </Button>
-            }
-          />
-          <ProfileDropdown
-            trigger={
-              <Button
-                id="profile-dropdown-trigger-06"
-                variant="ghost"
-                size="icon"
-                className="size-7 rounded-full cursor-pointer"
-                suppressHydrationWarning
-              >
-                <Avatar className="size-7 rounded-full">
-                  <AvatarImage src="https://images.shadcnspace.com/assets/profiles/user-11.jpg" />
-                  <AvatarFallback>NJ</AvatarFallback>
+
+        <div className="flex items-center gap-3">
+          {currentUser ? (
+            <>
+              <Link to="/my-profile" title={currentUser.name}>
+                <Avatar className="size-8 rounded-full border border-slate-200 transition-transform hover:scale-105">
+                  <AvatarFallback className="bg-gradient-to-tr from-royal-plum to-raspberry-plum text-xs font-bold text-white">
+                    {getInitials(currentUser.name)}
+                  </AvatarFallback>
                 </Avatar>
+              </Link>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="text-red-600 hover:bg-red-50 hover:text-red-700"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline ml-1.5">Logout</span>
               </Button>
-            }
-          />
+            </>
+          ) : (
+            <Button asChild size="sm" className="bg-royal-plum hover:bg-raspberry-plum">
+              <Link to="/login">Login</Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>
